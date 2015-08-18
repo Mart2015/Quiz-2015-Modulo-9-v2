@@ -1,0 +1,8 @@
+<% if (respuesta == "Correcto") { %>
+      <font color="#77FF77">
+<% } else if (respuesta == "Incorrexto") { %>
+      <font color="red">
+<% } %>
+<%= respuesta %></font>
+<p>
+<a href='/quizes/<%= quiz.id %>'>Intentelo otra vez</a>
