@@ -38,10 +38,13 @@ app.use( function(req, res, next) {
 
   if (!req.session.redir) {
     req.session.redir = '/';
+    //console.log("1 " + req.path);
   }
 
   if (!req.path.match(/\/login|\/logout/)) {
-    req.session.redir = req.path;
+    req.session.redir = '/';
+    //req.session.redir = req.path;
+    //console.log("2 " + req.path);
   }
 
   // copiar la sesion para hacerla accesible en las vistas
@@ -50,32 +53,6 @@ app.use( function(req, res, next) {
 });
 
 // instalar enrutadores
-app.use('/', function(req, res, next) {
-  var now = new Date();
-  var stamp = req.session.time ? new Date(req.session.time) : now;
-
-  if (!req.path.match(/\/login|\/logout/)) {
-    // validamos tiempo ultima peticion > 2 minutos
-    if ((now.getMinutes() - 1) > stamp.getMinutes()) {
-      delete req.session.user;
-      var errors = [{"message" : 'Sesión caducada. Debe volver a loguearse en el sistema para poder continuar.'}];
-      req.session.errors = {};
-      console.log("SESION CADUCADA. now: " + (now.getMinutes() - 1) + " stamp: " + stamp.getMinutes());
-      res.render('sessions/new', {
-        errors: errors
-      });
-    } else {
-      // refrescamos tiempo ultima peticion
-      req.session.time = new Date();
-      console.log("SESION REFRESCADA: " + req.session.time);
-      req.session.errors = {};
-      next();
-    }
-  } else {
-    next();
-  }
-}, routes);
-
 app.use('/', routes);
 
 // resto de rutas: generar error 404
